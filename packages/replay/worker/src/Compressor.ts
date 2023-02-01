@@ -1,4 +1,4 @@
-import { constants, Deflate } from 'pako';
+import { constants, Deflate, deflate } from 'pako';
 
 export class Compressor {
   /**
@@ -58,4 +58,8 @@ export class Compressor {
     // Fake an array by adding a `[`
     this.deflate.push('[', constants.Z_NO_FLUSH);
   }
+}
+
+export function compress(data: string): Uint8Array {
+  return deflate(data);
 }
