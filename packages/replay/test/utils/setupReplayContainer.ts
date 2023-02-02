@@ -33,7 +33,7 @@ export function setupReplayContainer({
   replay.recordingMode = replay.session?.sampled === 'error' ? 'error' : 'session';
   replay.eventBuffer = createEventBuffer({
     useCompression: options?.useCompression || false,
-    recordingMode: replay.recordingMode,
+    keepLastCheckout: replay.recordingMode === 'error',
   });
 
   return replay;

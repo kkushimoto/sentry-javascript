@@ -180,7 +180,7 @@ export class ReplayContainer implements ReplayContainerInterface {
 
     this.eventBuffer = createEventBuffer({
       useCompression: this._options.useCompression,
-      recordingMode: this.recordingMode,
+      keepLastCheckout: this.recordingMode === 'error',
     });
 
     this._addListeners();

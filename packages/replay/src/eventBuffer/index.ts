@@ -1,4 +1,3 @@
-import type { ReplayRecordingMode } from '@sentry/types';
 import { logger } from '@sentry/utils';
 
 import type { EventBuffer } from '../types';
@@ -8,13 +7,13 @@ import { EventBufferProxy } from './EventBufferProxy';
 
 interface CreateEventBufferParams {
   useCompression: boolean;
-  recordingMode: ReplayRecordingMode;
+  keepLastCheckout: boolean;
 }
 
 /**
  * Create an event buffer for replays.
  */
-export function createEventBuffer({ useCompression, recordingMode }: CreateEventBufferParams): EventBuffer {
+export function createEventBuffer({ useCompression, keepLastCheckout }: CreateEventBufferParams): EventBuffer {
   // eslint-disable-next-line no-restricted-globals
   if (useCompression && window.Worker) {
     try {
@@ -23,7 +22,7 @@ export function createEventBuffer({ useCompression, recordingMode }: CreateEvent
 
       __DEBUG_BUILD__ && logger.log('[Replay] Using compression worker');
       const worker = new Worker(workerUrl);
-      return new EventBufferProxy(worker, recordingMode);
+      return new EventBufferProxy(worker, keepLastCheckout);
     } catch (error) {
       __DEBUG_BUILD__ && logger.log('[Replay] Failed to create compression worker');
       // Fall back to use simple event buffer array

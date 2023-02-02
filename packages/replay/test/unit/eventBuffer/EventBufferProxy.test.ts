@@ -23,7 +23,7 @@ describe('Unit | eventBuffer | EventBufferProxy', () => {
   it('waits for the worker to be loaded when calling finish', async function () {
     const buffer = createEventBuffer({
       useCompression: true,
-      recordingMode: 'session',
+      keepLastCheckout: false,
     }) as EventBufferProxy;
 
     expect(buffer).toBeInstanceOf(EventBufferProxy);

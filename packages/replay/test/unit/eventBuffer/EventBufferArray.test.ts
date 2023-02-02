@@ -8,7 +8,7 @@ const TEST_EVENT = { data: {}, timestamp: BASE_TIMESTAMP, type: 3 };
 describe('Unit | eventBuffer | EventBufferArray', () => {
   for (const recordingMode of ['session', 'error'] as ReplayRecordingMode[]) {
     it(`adds events to normal event buffer with recordingMode=${recordingMode}`, async function () {
-      const buffer = createEventBuffer({ useCompression: false, recordingMode });
+      const buffer = createEventBuffer({ useCompression: false, keepLastCheckout: recordingMode === 'error' });
 
       buffer.addEvent(TEST_EVENT);
       buffer.addEvent(TEST_EVENT);
@@ -19,7 +19,7 @@ describe('Unit | eventBuffer | EventBufferArray', () => {
     });
 
     it(`adds checkout event to normal event buffer with recordingMode=${recordingMode}`, async function () {
-      const buffer = createEventBuffer({ useCompression: false, recordingMode });
+      const buffer = createEventBuffer({ useCompression: false, keepLastCheckout: recordingMode === 'error' });
 
       buffer.addEvent(TEST_EVENT);
       buffer.addEvent(TEST_EVENT);
@@ -36,7 +36,7 @@ describe('Unit | eventBuffer | EventBufferArray', () => {
     });
 
     it(`calling \`finish()\` multiple times does not result in duplicated events with recordingMode=${recordingMode}`, async function () {
-      const buffer = createEventBuffer({ useCompression: false, recordingMode });
+      const buffer = createEventBuffer({ useCompression: false, keepLastCheckout: recordingMode === 'error' });
 
       buffer.addEvent(TEST_EVENT);
 

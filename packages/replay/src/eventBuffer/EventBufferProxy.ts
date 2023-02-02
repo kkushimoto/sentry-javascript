@@ -1,4 +1,4 @@
-import type { ReplayRecordingData, ReplayRecordingMode } from '@sentry/types';
+import type { ReplayRecordingData } from '@sentry/types';
 import { logger } from '@sentry/utils';
 
 import type { AddEventResult, EventBuffer, RecordingEvent } from '../types';
@@ -17,16 +17,15 @@ export class EventBufferProxy implements EventBuffer {
   private _used: EventBuffer;
   private _ensureWorkerIsLoadedPromise: Promise<void>;
 
-  public constructor(worker: Worker, recordingMode: ReplayRecordingMode) {
+  public constructor(worker: Worker, keepLastCheckout: boolean) {
     this._fallback = new EventBufferArray();
 
     // In error mode, we use the partitioned compression worker, which does not use compression streaming
     // Instead, all events are sent at finish-time, as we need to continuously modify the queued events
     // In session mode, we use a streaming compression implementation, which is more performant
-    this._compression =
-      recordingMode === 'error'
-        ? new EventBufferPartitionedCompressionWorker(worker)
-        : new EventBufferCompressionWorker(worker);
+    this._compression = keepLastCheckout
+      ? new EventBufferPartitionedCompressionWorker(worker)
+      : new EventBufferCompressionWorker(worker);
 
     this._used = this._fallback;
     this._ensureWorkerIsLoadedPromise = this._ensureWorkerIsLoaded();
